@@ -130,7 +130,22 @@ Ext.define('Explorer.view.main.Main', {
 
         plugins: {
             ptype: 'treeviewdragdrop',
-            containerScroll: true
+            containerScroll: true,
+            // listeners: {
+            //     beforedrop: function (node, data, overModel, dropPosition, dropHandlers) {
+            //         // Defer the handling
+            //         console.log('inside beforedrop');
+            //         dropHandlers.wait = true;
+            //         Ext.MessageBox.confirm('Drop', 'Are you sure', function (btn) {
+            //             if (btn === 'yes') {
+            //                 dropHandlers.processDrop();
+            //             } else {
+            //                 dropHandlers.cancelDrop();
+            //             }
+            //         });
+            //     },
+            //     alert: console.log('afterdrop'),
+            // }
         },
     },
     plugins: [
