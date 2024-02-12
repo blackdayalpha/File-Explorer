@@ -32,6 +32,37 @@ Ext.define('Explorer.view.main.ExplorerController', {
         var selectedEl = Ext.getCmp('expView').getSelection();
         Ext.create('view.popup').show();
     },
+
+    //  onSaveClick: function (p_strFileName, selectedNodeList) {
+    //     // Get the entered file name from the form
+    //     var fileName = p_strFileName;
+
+    //     // Get the selected node
+    //     var selectedNode = selectedNodeList[0];
+
+    //     // Check for duplicate file names
+    //     var isDuplicate = false;
+    //     console.log('in func out loop')
+    //     console.log(selectedNode.parentNode)
+    //     let parentNode = selectedNode.parentNode
+
+    //     Ext.Array.forEach(parentNode.childNodes, function (node) {
+    //         if (node.get('fileName') === fileName) {
+    //             console.log('Duplicate found:', fileName);
+    //             isDuplicate = true;
+    //             return false; // Break the loop if duplicate found
+    //         }
+    //     });
+
+    //     if (isDuplicate) {
+    //         Ext.Msg.alert('Error', 'File name must be unique within the folder.');
+    //         return;
+    //     }
+    //     return true;
+
+    //     // Proceed with saving if no duplicates found
+    //     // Your logic to save the file
+    // },
     onRefreshClick: function () {
         // console.log(Ext.getStore('dataStore'))
         // Ext.getStore('dataStore').reload();
