@@ -2,49 +2,94 @@ Ext.define('Explorer.store.DataStore', {
     extend: 'Ext.data.TreeStore',
     model: 'Explorer.model.DataModel',
 
-    alias: 'store.data',
+    alias: 'store.datastore',
     storeId: 'dataStore',
-    reference: 'dataStore',
-    controller: 'explorer',
 
-
-    root: {
-        // id: 1,
-        fileName: 'Docs',
-        // date: new Date(),
-        // fType : 'root',
+    default: {
         expanded: true,
+    },
+    root: {
+        fileName: 'MyApp',
+        fType: 'Folder',
+        expanded: true,
+        draggable: true,
         children: [{
-            // id: 2,
-            fileName: 'Extra',
+            fileName: 'app',
             expanded: true,
+            expanded: true,
+            fType: 'Folder',
             children: [{
-                // id: 3,
-                fileName: 'random.txt',
-                leaf: true,
+                fileName: 'model',
+                expanded: true,
+                fType: 'Folder',
                 draggable: true,
+                children: [{
+                    fileName: 'Base.js',
+                    draggable: true,
+                    fType: 'File',
+                    leaf: true,
+                }, {
+                    fileName: 'DataModel.js',
+                    draggable: true,
+                    fType: 'File',
+                    leaf: true,
+                }]
             }, {
-                // id: 4,
-                fileName: 'random2.txt',
+                fileName: 'store',
+                expanded: true,
+                fType: 'Folder',
                 draggable: true,
+                children: [{
+                    fileName: 'DataStore.js',
+                    draggable: true,
+                    fType: 'File',
+                    leaf: true,
+                }]
+            }, {
+                fileName: 'view',
+                expanded: true,
+                fType: 'Folder',
+                draggable: true,
+                children: [{
+                    fileName: 'AddFile.js',
+                    draggable: true,
+                    fType: 'File',
+                    leaf: true,
+                }, {
+                    fileName: 'List.js',
+                    draggable: true,
+                    fType: 'File',
+                    leaf: true,
+                }]
+            }, {
+                fileName: 'Application.js',
+                draggable: true,
+                fType: 'File',
                 leaf: true,
             }]
         }, {
-            // id: 5,
-            fileName: 'Apple',
-            fType: 'folder',
-            expanded: true,
-            children: [{
-                // id: 6,
-                fileName: 'random2.txt',
-                leaf: true,
-                draggable: true,
-            }, {
-                // id: 7,
-                fileName: 'random.txt',
-                draggable: true,
-                leaf: true,
-            }]
+            fileName: 'index.html',
+            leaf: true,
+            fType: 'File',
+            draggable: true,
+        }, {
+            fileName: 'app.js',
+            fType: 'File',
+            draggable: true,
+            leaf: true,
         }]
-    }
+    },
+
+    lazyFill: false,
+
+    // If a leaf node passes the filter, all its ancestors will be filtered in
+    filterer: 'bottomup',
+    proxy: {
+        type: 'memory',
+        reader: {
+            table: 'json'
+        }
+    },
+    // autoLoad: true,
+
 })
