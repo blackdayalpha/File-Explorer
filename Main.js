@@ -1,167 +1,194 @@
 /**
- * This class is the main view for the application. It is specified in app.js as the
- * "mainView" property. That setting automatically applies the "viewport"
- * plugin causing this view to become the body element (i.e., the viewport).
+ * @class Explorer.view.main.Main
+ * @extends Ext.tree.Panel
  *
- * TODO - Replace this content of this view to suite the needs of your application.
+ * This class represents the main view of the file explorer application.
  */
-
 Ext.define('Explorer.view.main.Main', {
     extend: 'Ext.tree.Panel',
-    title: 'File Explorer',
     controller: 'explorer',
     id: 'expView',
+    alias: 'view.treePanel',
+    xtype: 'view.treePanel',
     requires: [
         'Explorer.store.DataStore',
+        'Ext.grid.filters.Filters',
     ],
-    plugins: {
-        gridfilters: true // Enable grid filters plugin
-    },
     viewModel: {
         type: 'main'
     },
-
     reference: 'fileExp',
-
     store: {
-        type: 'data',
-        folderSort: true,
-        sorters: [{
-            property: 'text',
-            direction: 'ASC'
-        }],
-        // filters: [{
-        //     property: 'fileName',
-        //     value: '',
-        //     anyMatch: true,
-        //     caseSensitive: false
-        // }]
-        filter: {
-            type: 'string', // Specify the filter type (string, number, date, etc.)
-            operator: 'like' // Specify the filter operator (like, =, <, >, etc.)
-        }
+        type: 'datastore',
     },
-    alias: 'view.treePanel',
-    xtype: 'view.treePanel',
-    header: true,
-    dataIndex: 'file',
 
-    ui: 'navigation',
-    reserveScrollbar: true,
+    /**
+     * @cfg {Boolean} multiSelect
+     * True to enable multi-selection within the tree panel.
+     */
     multiSelect: true,
-    folderSort: true,
-    lines: true,
-    columns: [{
-        xtype: 'treecolumn',
-        text: 'This PC',
-        dataIndex: 'fileName',
-        flex: 1,
-        sortable: true, editor: 'textfield',
-        filter: {
-            type: 'string',
-            operator: '/=' // RegExp.test() operator
-        }
-    }],
 
 
+    /**
+     * @cfg {Array} columns
+     * Specifies the columns configuration for this tree panel.
+     */
+    columns: [
+        {
+            xtype: 'treecolumn',
+            frame: true,
+            bind: {
+                text: '{projectName}'
+            },
+            dataIndex: 'fileName',
+            editor: 'textfield',
+            items: [{
+                xtype: 'label',
+                itemId: 'file-path',
+                bind: {
+                    html: '{selectionText}'
+                },
+                padding: '5 0 5 15',
+                style: {
+                    fontSize: '12px',
+                    itemAlign: 'center',
+                    width: '100%'
+                },
+            }, {
+                xtype: 'textfield',
+                emptyText: 'Search here...',
+                padding: '5 0 5 15',
+                width: 150,
+                listeners: {
+                    change: 'searchForFiles'
+                }
+
+            }],
+            width: 500,
+            sortable: true,
+            filter: true,
+        }],
+
+
+    selModel: {
+        injectCheckBox: 'first',
+        mode: 'MULTI',
+        type: 'checkboxmodel',
+        checkOnly: false,
+        checkOnlyText: false
+    },
     useArrows: true,
 
-
+    /**
+         * @cfg {Object} tbar
+         * Specifies the top toolbar configuration for this panel.
+         */
     tbar: {
         reference: 'tbar',
+        autoscroll: true,
+        style: {
+            backgroundColor: '#157fcc'
+        },
         items: [{
+            xtype: 'label',
+            bind: {
+                text: '{heading}',
+            },
+            flex: 1,
+            style: {
+                fontSize: '20px',
+                color: 'white',
+                fontWeight: 'bold'
+            }
+        }, {
             text: 'Expand All',
-            handler: 'onExpandAllClick'
-            ,
+            handler: 'expandAllNodes',
+            tooltip: 'Expand All Nodes (Shift + E)',
             iconCls: "fas fa-expand"
         }, {
             text: 'Collapse All',
-            handler: 'onCollapseAllClick'
-            ,
+            handler: 'collapseAllNodes',
+            tooltip: 'Collapse All Nodes (Shift + C)',
             iconCls: "fas fa-compress-alt"
         }, {
-            text: 'Add File',
-            handler: 'onAddFileClick'
-            ,
-            iconCls: "fa fa-file"
-        }, {
-            text: 'Add Folder',
-            handler: 'onAddFolderClick'
-            ,
-            iconCls: "fas fa-folder-plus"
+            text: 'Add',
+            menu: [{
+                text: 'New File',
+                handler: 'addFile',
+                tooltip: 'Add New File (Insert)',
+                iconCls: "fa fa-file"
+            }, {
+                text: 'New Folder',
+                handler: 'addFolder',
+                tooltip: 'Add New Folder (Ctrl + Shift + F)',
+                iconCls: "fas fa-folder-plus"
+            }]
         }, {
             text: 'Refresh',
-            handler: 'onRefreshClick',
+            handler: 'refreshStoreData',
+            tooltip: 'Refresh Store Data (Shift + R)',
             iconCls: 'fas fa-sync-alt'
         }, {
             text: 'Delete',
-            handler: 'onDeleteClick',
+            handler: 'deleteSelectedFiles',
+            tooltip: 'Delete Selected Files (Del)',
             iconCls: 'fa fa-trash'
         }, {
-            text: 'Move Up',
-            handler: 'onMoveUpClick',
-            iconCls: 'fa fa-arrow-up'
-        }, {
-            text: 'Move Down',
-            handler: 'onMoveDownClick',
-            iconCls: 'fa fa-arrow-down'
+            text: 'Move',
+            menu: [{
+                text: 'Move Up',
+                handler: 'moveFileUp',
+                tooltip: 'Move Selected File Up (Shift + U)',
+                iconCls: "fa fa-arrow-up"
+            }, {
+                text: 'Move Down',
+                handler: 'moveFileDown',
+                tooltip: 'Move Selected File Down (Shift + D)',
+                iconCls: "fa fa-arrow-down"
+            }]
         }]
     },
-    bbar: [{
-        xtype: 'displayfield',
-        fieldLabel: 'Path',
-        itemId: 'file-path',
-        inputAttrTpl: 'style="font-size: 26px;"',
-
-        bind: {
-            html: '{selectionText}'
-        },
-        padding: '10 0 10 10 ',
-        style: {
-            width: '400px',
-            height: '50px',
-            fontSize: '20px',
-            itemAlign: 'center'
-        },
-    }],
-
-
     viewConfig: {
-
         plugins: {
             ptype: 'treeviewdragdrop',
             containerScroll: true,
-            // listeners: {
-            //     beforedrop: function (node, data, overModel, dropPosition, dropHandlers) {
-            //         // Defer the handling
-            //         console.log('inside beforedrop');
-            //         dropHandlers.wait = true;
-            //         Ext.MessageBox.confirm('Drop', 'Are you sure', function (btn) {
-            //             if (btn === 'yes') {
-            //                 dropHandlers.processDrop();
-            //             } else {
-            //                 dropHandlers.cancelDrop();
-            //             }
-            //         });
-            //     },
-            //     alert: console.log('afterdrop'),
-            // }
+            enableDrag: true,
         },
+
+    },
+    plugins: {
+        gridfilters: true,
     },
     plugins: [
         Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToEdit: 2
+            clicksToEdit: 2,
         })
     ],
 
+    /**
+     * @cfg {Object} listeners
+     * Specifies the listeners for this panel.
+     */
     listeners: {
+        itemcontextmenu: 'createCustomContextMenu',
+        beforedrop: 'validateBeforeDrop',
+    },
 
-        itemcontextmenu: 'pvtCreateCustomContextMenu'
-        // plugins: {
-        //     gridfilterbar: true
-        // },
-    }
-
-    // store: store
+    /**
+   * @cfg {Object} keyMap
+   * Specifies the key mappings for this panel.
+   */
+    keyMap: {
+        'Ctrl+C': 'copyFiles',
+        'Ctrl+V': 'pasteFiles',
+        'Shift+E': 'expandSelectedNode',
+        'Shift+C': 'collapseSelectedNode',
+        'Ctrl+Shift+F': 'addFolder',
+        'Delete': 'deleteSelectedFiles',
+        'Shift+R': 'refreshStoreData',
+        'Insert': 'addFile',
+        'Shift+U': 'moveFileUp',
+        'Shift+D': 'moveFileDown',
+    },
 
 });
