@@ -87,10 +87,16 @@ Ext.define('Explorer.view.main.Main', {
         reference: 'tbar',
         autoscroll: true,
         style: {
-            backgroundColor: '#157fcc'
+            backgroundColor: '#157fcc',
+        },
+
+        layout: {
+            type: 'vbox',
         },
         items: [{
             xtype: 'label',
+
+            margin: '5 10 5 10',
             bind: {
                 text: '{heading}',
             },
@@ -101,50 +107,70 @@ Ext.define('Explorer.view.main.Main', {
                 fontWeight: 'bold'
             }
         }, {
-            text: 'Expand All',
-            handler: 'expandAllNodes',
-            tooltip: 'Expand All Nodes (Shift + E)',
-            iconCls: "fas fa-expand"
-        }, {
-            text: 'Collapse All',
-            handler: 'collapseAllNodes',
-            tooltip: 'Collapse All Nodes (Shift + C)',
-            iconCls: "fas fa-compress-alt"
-        }, {
-            text: 'Add',
-            menu: [{
-                text: 'New File',
-                handler: 'addFile',
-                tooltip: 'Add New File (Insert)',
-                iconCls: "fa fa-file"
+            xtype: 'panel',
+
+            margin: '5 10 5 10',
+            alignItem: 'left',
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
+            defaults: {
+                flex: 1,
+                margin: '5 10 5 10',
+            },
+            items: [{
+                xtype: 'button',
+                text: 'Expand All',
+                handler: 'expandAllNodes',
+                tooltip: 'Expand All Nodes (Shift + E)',
+                iconCls: "fas fa-expand"
             }, {
-                text: 'New Folder',
-                handler: 'addFolder',
-                tooltip: 'Add New Folder (Ctrl + Shift + F)',
-                iconCls: "fas fa-folder-plus"
-            }]
-        }, {
-            text: 'Refresh',
-            handler: 'refreshStoreData',
-            tooltip: 'Refresh Store Data (Shift + R)',
-            iconCls: 'fas fa-sync-alt'
-        }, {
-            text: 'Delete',
-            handler: 'deleteSelectedFiles',
-            tooltip: 'Delete Selected Files (Del)',
-            iconCls: 'fa fa-trash'
-        }, {
-            text: 'Move',
-            menu: [{
-                text: 'Move Up',
-                handler: 'moveFileUp',
-                tooltip: 'Move Selected File Up (Shift + U)',
-                iconCls: "fa fa-arrow-up"
+                xtype: 'button',
+                text: 'Collapse All',
+                handler: 'collapseAllNodes',
+                tooltip: 'Collapse All Nodes (Shift + C)',
+                iconCls: "fas fa-compress-alt"
             }, {
-                text: 'Move Down',
-                handler: 'moveFileDown',
-                tooltip: 'Move Selected File Down (Shift + D)',
-                iconCls: "fa fa-arrow-down"
+                xtype: 'button',
+                text: 'Add',
+                menu: [{
+                    text: 'New File',
+                    handler: 'addFile',
+                    tooltip: 'Add New File (Insert)',
+                    iconCls: "fa fa-file"
+                }, {
+                    text: 'New Folder',
+                    handler: 'addFolder',
+                    tooltip: 'Add New Folder (Ctrl + Shift + F)',
+                    iconCls: "fas fa-folder-plus"
+                }]
+            }, {
+                xtype: 'button',
+                text: 'Refresh',
+                handler: 'refreshStoreData',
+                tooltip: 'Refresh Store Data (Shift + R)',
+                iconCls: 'fas fa-sync-alt'
+            }, {
+                xtype: 'button',
+                text: 'Delete',
+                handler: 'deleteSelectedFiles',
+                tooltip: 'Delete Selected Files (Del)',
+                iconCls: 'fa fa-trash'
+            }, {
+                xtype: 'button',
+                text: 'Move',
+                menu: [{
+                    text: 'Move Up',
+                    handler: 'moveFileUp',
+                    tooltip: 'Move Selected File Up (Shift + U)',
+                    iconCls: "fa fa-arrow-up"
+                }, {
+                    text: 'Move Down',
+                    handler: 'moveFileDown',
+                    tooltip: 'Move Selected File Down (Shift + D)',
+                    iconCls: "fa fa-arrow-down"
+                }]
             }]
         }]
     },
