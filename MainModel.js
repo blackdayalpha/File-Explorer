@@ -5,7 +5,10 @@ Ext.define('Explorer.view.main.MainModel', {
     extend: 'Ext.app.ViewModel',
 
     alias: 'viewmodel.main',
-    
+    data: {
+        heading: "File Manager",
+        projectName: "Directory"
+    },
     formulas: {
         selectionText: function (get) {
             var selection = get('fileExp.selection'), path;
@@ -18,5 +21,4 @@ Ext.define('Explorer.view.main.MainModel', {
             }
         }
     },
-    //TODO - add data, formulas and/or methods to support your view
 });
